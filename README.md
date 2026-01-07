@@ -25,3 +25,6 @@ First download your file to your computer.
 <br>
 open the file in any code editor you prefer i.e. V.S. code
 <br>
+<img width="721" height="68" alt="Screenshot 2026-01-07 at 18 43 46" src="https://github.com/user-attachments/assets/6e436c75-2f61-4b0b-8dba-b04979866833" />
+<br>
+use this to run yor lexon file from the terminal in the interpreter board.
