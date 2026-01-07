@@ -1,7 +1,7 @@
 import sys
 import re
 
-class HPXError(Exception):
+class LXNError(Exception):
     pass
 
 class StopLoop(Exception):
@@ -25,7 +25,7 @@ class Interpreter:
 
     def evaluate(self, expr: str):
         if expr is None:
-            raise HPXError("Empty expression")
+            raise LXNError("Empty expression")
         expr = expr.strip()
 
         expr = self._normalize_equality(expr)
@@ -33,10 +33,10 @@ class Interpreter:
         try:
             env = self._eval_env()
             return eval(expr, {}, {**env, **self.variables})
-        except HPXError:
+        except LXNError:
             raise
         except Exception as e:
-            raise HPXError(f"Invalid expression `{expr}`: {e}")
+            raise LXNError(f"Invalid expression `{expr}`: {e}")
 
     def execute(self, lines):
         self.run_block(lines, 0, len(lines))
@@ -70,7 +70,7 @@ class Interpreter:
                 i = self.handle_forever(lines, i)
 
             else:
-                raise HPXError(f"Unknown instruction: `{line}` (line {i+1})")
+                raise LXNError(f"Unknown instruction: `{line}` (line {i+1})")
 
             i += 1
 
@@ -82,7 +82,7 @@ class Interpreter:
                 raise ValueError
             _, name, _, expr = parts
         except Exception:
-            raise HPXError(f"Invalid keep statement: `{line}`")
+            raise LXNError(f"Invalid keep statement: `{line}`")
 
         expr = expr.strip()
 
@@ -95,10 +95,10 @@ class Interpreter:
 
     def handle_say(self, line: str):
         if not line.startswith("say(") or not line.endswith(")"):
-            raise HPXError(f"Invalid say statement, use say(<expression>) : `{line}`")
+            raise LXNError(f"Invalid say statement, use say(<expression>) : `{line}`")
         inner = line[4:-1].strip()
         if inner == "":
-            raise HPXError("say() requires an expression")
+            raise LXNError("say() requires an expression")
         value = self.evaluate(inner)
         print(value)
 
@@ -155,7 +155,7 @@ class Interpreter:
     def handle_repeat_until(self, lines, index):
         condition = lines[index].strip()[13:].strip()
         if condition == "":
-            raise HPXError("repeat until requires a condition")
+            raise LXNError("repeat until requires a condition")
         block, end = self.collect_block(lines, index)
 
         while not self.evaluate(condition):
@@ -177,18 +177,18 @@ class Interpreter:
 
 
 def load_file(path):
-    if not path.endswith(".hpx"):
-        raise HPXError("File must have .hpx extension")
+    if not path.endswith(".lxn"):
+        raise LXNError("File must have .lxn extension")
     with open(path, "r", encoding="utf-8") as f:
         return f.readlines()
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 hpx_interpreter.py program.hpx")
+        print("Usage: python3 lxn_interpreter.py program.lxn")
         sys.exit(1)
 
     try:
         program = load_file(sys.argv[1])
         Interpreter().execute(program)
-    except HPXError as e:
-        print("HPX Error:", e)
+    except LXNError as e:
+        print("LXN Error:", e)
