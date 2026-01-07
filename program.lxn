@@ -1,0 +1,45 @@
+keep score to 0
+keep rounds to whole(ask("How many questions do you want to answer? "))
+
+repeat until rounds = 0
+    say("Question 1: What is 5 + 3?")
+    keep answer1 to whole(ask())
+    when answer1 = 8
+        say("Correct!")
+        keep score to score + 1
+    complete
+        say("Wrong!")
+
+    say("Question 2: What is 10 - 4?")
+    keep answer2 to whole(ask())
+    when answer2 = 6
+        say("Correct!")
+        keep score to score + 1
+    complete
+        say("Wrong!")
+
+    say("Question 3: What is the first letter of HPX?")
+    keep answer3 to letters(ask())
+    when answer3 = "H"
+        say("Correct!")
+        keep score to score + 1
+    complete
+        say("Wrong!")
+
+    when score = 3
+        say("Amazing! You got all 3 right!")
+    or score = 2
+        say("Great! You got 2 correct!")
+    or score = 1
+        say("Not bad! 1 correct!")
+    complete
+        say("Oops! No correct answers!")
+
+    keep rounds to rounds - 1
+    when rounds = 0
+        stop
+    complete
+        say("Next round!")
+        
+say("Quiz finished! Your final score is:")
+say(score)
